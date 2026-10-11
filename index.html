@@ -449,12 +449,12 @@ document.getElementById('dessertNext').addEventListener('click',()=>{
 document.getElementById('confirmBtn').addEventListener('click',async()=>{
   const status=document.getElementById('status'), btn=document.getElementById('confirmBtn');
   if(EMAILJS_PUBLIC_KEY.startsWith('ADICIONA_')||EMAILJS_SERVICE_ID.startsWith('ADICIONA_')||EMAILJS_TEMPLATE_ID.startsWith('ADICIONA_')){
-    status.textContent=msg('O site está pronto, mas falta ligar o serviço de email para a confirmação chegar automaticamente. Não foi enviado nenhum email.','The site is ready, but the email service still needs to be connected for automatic confirmation. No email was sent.');
+    status.textContent=msg('O site está pronto, mas falta ligar o serviço de e-mail para a confirmação chegar automaticamente. Não foi enviado nenhum e-mail.','The site is ready, but the email service still needs to be connected for automatic confirmation. No email was sent.');
     return;
   }
   btn.disabled=true;status.textContent=msg('A enviar a confirmação...','Sending confirmation...');
   try{
-    if(!window.emailjs)throw new Error('Serviço de email indisponível');
+    if(!window.emailjs)throw new Error('Serviço de e-mail indisponível');
     emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});
     const dateObj=new Date(selectedDate+'T12:00:00');
     await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,{
@@ -467,7 +467,7 @@ document.getElementById('confirmBtn').addEventListener('click',async()=>{
       dessert:language==='en'?(dessertEnglish[selectedDessert]||selectedDessert):selectedDessert,
       response:msg('Sim, aceitou o date ❤️','Yes, accepted the date ❤️')
     });
-    status.textContent=msg('Confirmação enviada! Agora é contigo preparar a surpresa. 😏❤️','Confirmation sent! Now it\'s your turn to prepare the surprise. 😏❤️');
+    status.textContent=msg('Confirmação enviada! Agora é comigo preparar a surpresa. 😏 ❤️','Confirmation sent! Now it\'s my turn to prepare the surprise. 😏 ❤️');
     btn.textContent=msg('Confirmado ❤️','Confirmed ❤️');
   }catch(err){
     status.textContent=msg('Não foi possível enviar o email agora. Tenta novamente mais tarde.','Could not send the email right now. Please try again later.');
