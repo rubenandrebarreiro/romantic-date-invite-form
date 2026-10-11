@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Um convite para ti... ❤️</title>
+<style>
+:root{--wine:#7e2447;--rose:#f6c6d3;--cream:#fff8f5;--ink:#432333;--pink:#e85d83;
+--page-bg:#fff8f5;--page-bg2:#f9e8ee;--card-bg:rgba(255,255,255,.88);--card-border:#f1d6df;
+--field-bg:#fff;--field-border:#e7c5d1;--muted:#896576;--soft:#f9e7ed;--soft-text:#7e2447;
+--note-bg:#fff3f6;--note-text:#89566d;--shadow:#7e24471a;--footer:#b58b9b}
+body.dark{--wine:#f2a9c0;--rose:#573244;--cream:#17121a;--ink:#f8eaf0;--pink:#ff82a8;
+--page-bg:#17121a;--page-bg2:#281a27;--card-bg:rgba(39,29,41,.96);--card-border:#54374a;
+--field-bg:#211923;--field-border:#684458;--muted:#c5a4b6;--soft:#382432;--soft-text:#ffdbe6;
+--note-bg:#34222f;--note-text:#e5c2d2;--shadow:#00000055;--footer:#a98b9d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at top left,var(--rose),transparent 38%),linear-gradient(135deg,var(--page-bg),var(--page-bg2));font-family:Georgia,'Times New Roman',serif;color:var(--ink);transition:background .25s,color .25s}
+.card{width:min(100%,620px);background:var(--card-bg);border:1px solid var(--card-border);border-radius:28px;padding:clamp(24px,5vw,46px);box-shadow:0 22px 70px var(--shadow);text-align:center;position:relative;overflow:hidden;transition:background .25s,border-color .25s}
+.eyebrow{font:700 11px/1.4 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#ad5272}
+h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.08;margin:14px 0;color:var(--wine);font-weight:600}
+p{font-size:1.08rem;line-height:1.65}
+.small{font: .9rem/1.5 system-ui,sans-serif;color:var(--muted)}
+input,select{width:100%;padding:15px 16px;border:1px solid var(--field-border);border-radius:14px;background:var(--field-bg);font:1rem system-ui,sans-serif;color:var(--ink);outline:none;margin:8px 0 14px}
+input:focus,select:focus{border-color:var(--pink);box-shadow:0 0 0 3px #e85d8320}
+button{border:0;border-radius:999px;padding:14px 23px;font:700 .98rem system-ui,sans-serif;cursor:pointer;transition:transform .16s,box-shadow .16s}
+button:hover{transform:translateY(-2px)}
+.primary{background:var(--wine);color:#fff;box-shadow:0 8px 18px #7e24472b}
+.secondary{background:var(--soft);color:var(--soft-text)}
+.btnrow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+#noBtn{position:relative}
+.hidden{display:none!important}
+.heart{font-size:2rem;animation:beat 1.5s infinite;display:inline-block}
+@keyframes beat{50%{transform:scale(1.13)}}
+.step{font:700 11px system-ui,sans-serif;letter-spacing:.16em;color:#ad5272;text-transform:uppercase}
+.progress{height:5px;background:#f5e3e9;border-radius:9px;margin:0 0 28px;overflow:hidden}
+.progress span{display:block;height:100%;width:20%;background:var(--pink);transition:width .3s}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:18px 0}
+.day,.weekday{padding:10px 0;border-radius:10px;text-align:center;font: .9rem system-ui,sans-serif}
+.weekday{font-weight:700;color:var(--muted);font-size:.75rem}
+.day{border:1px solid var(--card-border);background:var(--field-bg);color:var(--ink);cursor:pointer}
+.day:disabled{opacity:.25;cursor:not-allowed}
+.day.selected{background:var(--wine);color:white;border-color:var(--wine)}
+.day:not(:disabled):hover{border-color:var(--pink)}
+.monthnav{display:flex;align-items:center;justify-content:space-between;gap:12px;font:700 1rem system-ui,sans-serif}
+.monthnav button{padding:8px 13px;background:var(--soft);color:var(--soft-text)}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:22px 0}
+.choice{background:var(--field-bg);color:var(--ink);border:1px solid var(--card-border);border-radius:16px;padding:15px 10px;font:600 .95rem system-ui,sans-serif}
+.choice.selected{background:var(--soft);border:2px solid var(--pink);padding:14px 9px}
+.choice span{display:block;font-size:1.5rem;margin-bottom:5px}
+.note{padding:14px 16px;background:var(--note-bg);border-radius:14px;font: .9rem/1.5 system-ui,sans-serif;color:var(--note-text);margin-top:16px}
+.footer{font: .75rem system-ui,sans-serif;color:var(--footer);margin-top:24px}
+.language-switch{display:flex;justify-content:flex-end;gap:6px;margin-bottom:10px}.lang-btn{padding:8px 12px;border:1px solid var(--card-border);background:var(--soft);color:var(--soft-text);font:700 .8rem system-ui,sans-serif}.lang-btn.active{background:var(--wine);color:#fff;border-color:var(--wine)}
+.theme-toggle{display:inline-flex;align-items:center;gap:8px;margin-top:15px;padding:10px 15px;border:1px solid var(--card-border);border-radius:999px;background:var(--soft);color:var(--soft-text);font:600 .85rem system-ui,sans-serif}
+.theme-toggle .icon{font-size:1.05rem}
+#timeError{display:none;text-align:left;margin:-4px 0 12px;color:#a02b51;font: .88rem/1.45 system-ui,sans-serif;background:var(--note-bg);border:1px solid var(--card-border);border-radius:12px;padding:10px 12px}
+#timeError.visible{display:block}
+.validation{display:none;text-align:left;margin:-4px 0 12px;color:#a02b51;font:.88rem/1.45 system-ui,sans-serif;background:var(--note-bg);border:1px solid var(--card-border);border-radius:12px;padding:10px 12px}
+.validation.visible{display:block}
+#status{min-height:24px;font: .85rem system-ui,sans-serif;color:#a02b51;margin-top:12px}
+@media(max-width:420px){.choices{grid-template-columns:1fr 1fr}.day{padding:8px 0;font-size:.8rem}.card{padding:24px 18px}}
+#dateError {
+    white-space: pre-line !important;
+}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="language-switch" aria-label="Language / Idioma">
+    <button type="button" id="langPt" class="lang-btn active" aria-pressed="true">🇵🇹 PT</button>
+    <button type="button" id="langEn" class="lang-btn" aria-pressed="false">🇬🇧 EN</button>
+  </div>
+  <div class="heart" aria-hidden="true">💌</div>
+  <div class="progress"><span id="progress"></span></div>
+
+  <section id="s1">
+    <div class="eyebrow">Um pequeno mistério</div>
+    <h1>Antes de começarmos...</h1>
+    <p>Como te chamas, menina misteriosa? 👀</p>
+    <input id="name" type="text" maxlength="50" autocomplete="given-name" placeholder="O teu nome..." aria-label="O teu nome">
+    <div class="btnrow"><button class="primary" id="nameNext">Continuar ❤️</button></div>
+    <p class="small">Prometo que não é um formulário de candidatura. 😇</p>
+  </section>
+
+  <section id="s2" class="hidden">
+    <div class="eyebrow">Uma pergunta muito importante</div>
+    <h1 id="greeting">Aceitas um [[date]] comigo?</h1>
+    <p>Mas pensa bem antes de responder... Há convites que podem ter consequências. 🤭</p>
+    <div class="btnrow" style="min-height:58px;align-items:center">
+      <button class="primary" id="yesBtn">SIM ❤️</button>
+      <button class="secondary" id="noBtn">Não 🙄</button>
+    </div>
+    <p id="tease" class="small">Escolhe com sabedoria. Ou tenta, vá. 😈</p>
+  </section>
+
+  <section id="s3" class="hidden">
+    <div class="step">Passo 1 de 4</div>
+    <h1>Olhaaaa, temos uma corajosa! 😏</h1>
+    <p>Agora não vale dizer que não foste avisada. Vamos escolher o dia. ❤️</p>
+    <div class="monthnav"><button id="prevMonth" aria-label="Mês anterior">‹</button><strong id="monthLabel"></strong><button id="nextMonth" aria-label="Mês seguinte">›</button></div>
+    <div class="calendar" id="calendar"></div>
+    <label class="small" for="time">Hora preferida (opcional)</label>
+    <input id="time" type="time" aria-describedby="timeError">
+    <p id="timeError" role="alert" aria-live="polite"></p>
+    <p id="dateError" class="validation" role="alert" aria-live="polite"></p>
+    <div class="btnrow"><button class="primary" id="dateNext">É este o dia 📅</button></div>
+    <p class="small">Escolhe uma data futura. ⏩<br>O destino também precisa de agenda. 🔮</p>
+  </section>
+
+  <section id="s4" class="hidden">
+    <div class="step">Passo 2 de 4</div>
+    <h1>O que te apetece comer? 🍽️</h1>
+    <p>Há opções para quase todos os apetites. Escolhe a tua vibe. 😚<br>O restaurante... Continua segredo. 🤫</p>
+    <div class="choices" id="choices">
+      <button class="choice" data-food="Italiano"><span>🍝</span>Italiano</button>
+      <button class="choice" data-food="Sushi / Japonês"><span>🍣</span>Sushi / Japonês</button>
+      <button class="choice" data-food="Ramen"><span>🍜</span>Ramen</button>
+      <button class="choice" data-food="Dumplings"><span>🥟</span>Dumplings</button>
+      <button class="choice" data-food="Fast food"><span>🍟</span>Fast food</button>
+      <button class="choice" data-food="Frango frito"><span>🍗</span>Frango frito</button>
+      <button class="choice" data-food="Hot dogs"><span>🌭</span>Hot dogs</button>
+      <button class="choice" data-food="Sandes / Baguetes"><span>🥖</span>Sandes / Baguetes</button>
+      <button class="choice" data-food="Wraps"><span>🌯</span>Wraps</button>
+      <button class="choice" data-food="Burritos / Quesadillas"><span>🌯</span>Burritos / <i>Quesadillas</i></button>
+      <button class="choice" data-food="Street Food"><span>🛵</span><i>Street Food</i></button>
+      <button class="choice" data-food="Comida de Food Truck"><span>🚚</span>Comida de <i>Food Truck</i></button>
+      <button class="choice" data-food="Hambúrguer"><span>🍔</span>Hambúrguer</button>
+      <button class="choice" data-food="Pizza"><span>🍕</span>Pizza</button>
+      <button class="choice" data-food="Mexicano / Tacos"><span>🌮</span>Mexicano / Tacos</button>
+      <button class="choice" data-food="Steakhouse / Bife"><span>🥩</span><i>Steakhouse</i> / Bife</button>
+      <button class="choice" data-food="Churrasco"><span>🍖</span>Churrasco</button>
+      <button class="choice" data-food="Peixe grelhado"><span>🐟</span>Peixe Grelhado</button>
+      <button class="choice" data-food="Marisco"><span>🦐</span>Marisco</button>
+      <button class="choice" data-food="Comida portuguesa"><span>🥘</span>Comida Portuguesa</button>
+      <button class="choice" data-food="Francesinha"><span>🥪</span>Francesinha</button>
+      <button class="choice" data-food="Petiscos / Tapas"><span>🫒</span>Petiscos / Tapas</button>
+      <button class="choice" data-food="Grego"><span>🥙</span>Grego</button>
+      <button class="choice" data-food="Árabe / Libanês"><span>🧆</span>Árabe / Libanês</button>
+      <button class="choice" data-food="Indiano"><span>🍛</span>Indiano</button>
+      <button class="choice" data-food="Tailandês"><span>🍲</span>Tailandês</button>
+      <button class="choice" data-food="Chinês"><span>🥢</span>Chinês</button>
+      <button class="choice" data-food="Coreano"><span>🍗</span>Coreano</button>
+      <button class="choice" data-food="Francês"><span>🥖</span>Francês</button>
+      <button class="choice" data-food="Alemão"><span>🥨</span>Alemão</button>
+      <button class="choice" data-food="Saladas / Saudável"><span>🥗</span>Saladas / Saudável</button>
+      <button class="choice" data-food="Vegetariano / Vegan"><span>🌱</span>Vegetariano / Vegan</button>
+      <button class="choice" data-food="Fondue / Raclette"><span>🧀</span><i>Fondue</i> / <i>Raclette</i></button>
+      <button class="choice" data-food="Brunch"><span>🥞</span><i>Brunch</i></button>
+      <button class="choice" data-food="Pequeno-almoço"><span>🥐</span>Pequeno-almoço</button>
+            <button class="choice" data-food="Ostras e marisco"><span>🦪</span>Ostras e Marisco</button>
+      <button class="choice" data-food="Poke / Bowls"><span>🍚</span><i>Poke</i> / <i>Bowls</i></button>
+      <button class="choice" data-food="Kebab / Turco"><span>🥙</span><i>Kebab</i> / Turco</button>
+      <button class="choice" data-food="Comida de conforto"><span>🍲</span>Comida de Conforto</button>
+      <button class="choice" data-food="Cozinha Internacional"><span>🌍</span>Cozinha Internacional</button>
+      <button class="choice" data-food="Brasileiro"><span>🇧🇷</span>Brasileiro</button>
+      <button class="choice" data-food="Argentino"><span>🥩</span>Argentino</button>
+      <button class="choice" data-food="Vietnamita"><span>🍜</span>Vietnamita</button>
+      <button class="choice" data-food="Buffet Livre"><span>🍱</span>Buffet Livre</button>
+      <button class="choice" data-food="All-You-Can-Eat"><span>♾️</span><i>All-You-Can-Eat</i></button>
+      <button class="choice" data-food="Fusão Asiática"><span>🥢</span>Fusão Asiática</button>
+      <button class="choice" data-food="Comida de Forno"><span>🥧</span>Comida de Forno</button>
+            <button class="choice" data-food="Surpreende-me"><span>🎁</span>Surpreende-me</button>
+    </div>
+    <p class="small">Escolhe uma opção para a refeição. A sobremesa fica para o próximo passo. 🤫</p>
+    <p id="foodError" class="validation" role="alert" aria-live="polite"></p>
+    <div class="btnrow"><button class="primary" id="foodNext">Agora, a sobremesa 🍰</button></div>
+  </section>
+
+  <section id="s5" class="hidden">
+    <div class="step">Passo 3 de 4</div>
+    <h1>E para sobremesa? 🍰</h1>
+    <p>Escolhe uma tentação... Ou deixa a imaginação trabalhar. 😏</p>
+    <div class="choices" id="dessertChoices">
+      <button class="choice" data-dessert="Cheesecake"><span>🍰</span>Cheesecake</button>
+      <button class="choice" data-dessert="Brownie com Gelado"><span>🍨</span>Brownie com Gelado</button>
+      <button class="choice" data-dessert="Crepes / Waffles"><span>🧇</span>Crepes / waffles</button>
+      <button class="choice" data-dessert="Gelado"><span>🍦</span>Gelado</button>
+      <button class="choice" data-dessert="Chocolate"><span>🍫</span>Chocolate</button>
+      <button class="choice" data-dessert="Tiramisu"><span>☕</span><i>Tiramisu</i></button>
+      <button class="choice" data-dessert="Churros"><span>🥨</span>Churros</button>
+      <button class="choice" data-dessert="Pastel de Nata"><span>🥧</span>Pastel de Nata</button>
+      <button class="choice" data-dessert="Panquecas"><span>🥞</span>Panquecas</button>
+      <button class="choice" data-dessert="Fruta Fresca"><span>🍓</span>Fruta fresca</button>
+      <button class="choice" data-dessert="Só um Café"><span>☕</span>Só um Café</button>
+      <button class="choice" data-dessert="Morangos com Chocolate"><span>🍓</span>Morangos com Chocolate</button>
+      <button class="choice" data-dessert="Surpreende-me Também"><span>🎁</span>Surpreende-me</button>
+      <button class="choice" data-dessert="A sobremesa podes ser tu 😉"><span>😏</span>A sobremesa podes ser tu</button>
+      <button class="choice" data-dessert="Logo se vê... 😉"><span>🤭</span>Logo se vê...</button>
+      <button class="choice" data-dessert="Dispenso sobremesa"><span>🙅</span>Dispenso Sobremesa</button>
+    </div>
+    <p class="small">Sem pressão: também podes escolher «Dispenso sobremesa». 😉</p>
+    <p id="dessertError" class="validation" role="alert" aria-live="polite"></p>
+    <div class="btnrow"><button class="secondary" id="dessertBack">Voltar à comida</button><button class="primary" id="dessertNext">Quero ver a surpresa 🤭</button></div>
+  </section>
+
+  <section id="s6" class="hidden">
+    <div class="step">Passo 4 de 4</div>
+    <h1>Temos um <i>date</i>... Quase oficial. ❤️</h1>
+    <p id="finalIntro">Boa escolha. Agora começa a parte interessante.</p>
+    <div class="note" id="summary"></div>
+    <p>📍 <strong>O restaurante?</strong> Segredo absoluto. 🤫<br>❤️‍🔥 <strong>O resto?</strong> Logo se vê... 😉</p>
+    <div class="note">Se carregares no botão de confirmar, eu recebo o resumo por e-mail. ✉️<br>Não precisas de revelar mais nenhum segredo... Por enquanto. 😏</div>
+    <div class="btnrow"><button class="primary" id="confirmBtn">Confirmar o date ❤️</button></div>
+    <div id="status" role="status" aria-live="polite"></div>
+    <button id="restart" class="secondary" style="margin-top:8px">Voltar ao início</button>
+  </section>
+  <div class="footer">Feito pelo Rúben André Barreiro, com um bocadinho de mistério e uma pitada de atrevimento. ✨</div>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="Ativar modo escuro">
+    <span class="icon" aria-hidden="true">🌙</span><span id="themeLabel">Ativar modo escuro</span>
+  </button>
+</main>
+
+<!-- Para ativar o envio automático, preenche as 3 constantes abaixo com os dados da tua conta EmailJS. -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+const EMAILJS_PUBLIC_KEY = "lvYJKhMGxtxZk5Jlu";
+const EMAILJS_SERVICE_ID = "service_7cy5v3n";
+const EMAILJS_TEMPLATE_ID = "template_x6m9fae";
+const EMAIL_TO = "ruben.andre.letra.barreiro@outlook.com";
+
+const themeToggle=document.getElementById('themeToggle');
+const themeLabel=document.getElementById('themeLabel');
+function setTheme(dark){
+  document.body.classList.toggle('dark',dark);
+  themeToggle.setAttribute('aria-pressed',String(dark));
+  themeToggle.setAttribute('aria-label',dark?'Ativar modo claro':'Ativar modo escuro');
+  themeToggle.querySelector('.icon').textContent=dark?'☀️':'🌙';
+  themeLabel.textContent=dark?'Ativar modo claro':'Ativar modo escuro';
+  try{localStorage.setItem('date-comigo-theme',dark?'dark':'light');}catch(e){}
+}
+try{setTheme(localStorage.getItem('date-comigo-theme')==='dark');}catch(e){setTheme(false);}
+themeToggle.addEventListener('click',()=>setTheme(!document.body.classList.contains('dark')));
+
+const sections = [...document.querySelectorAll('main section')];
+const progress = document.getElementById('progress');
+let current = 0, guestName = '', selectedDate = null, selectedFood = '', selectedDessert = '';
+let shownMonth = new Date(); shownMonth = new Date(shownMonth.getFullYear(), shownMonth.getMonth(), 1);
+const today = new Date(); today.setHours(0,0,0,0);
+function show(n){
+  sections.forEach((s,i)=>s.classList.toggle('hidden',i!==n));
+  current=n; progress.style.width=([10,22,42,68,84,100][n])+'%';
+}
+function safeText(s){
+  return String(s).replace(/[&<>"']/g,c=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[c]));
+}
+document.getElementById('nameNext').addEventListener('click',()=>{
+  const value=document.getElementById('name').value.trim();
+  if(!value){
+    document.getElementById('name').focus();
+    document.getElementById('name').placeholder=msg(
+      'Vá lá, diz-me o teu nome... 🤭',
+      'Come on, tell me your name... 🤭'
+    );
+    return;
+  }
+  guestName=value;
+  document.getElementById('greeting').innerHTML=language==='en'
+    ? `${safeText(guestName)}, will you go on a date with me?`
+    : `${safeText(guestName)}, aceitas um <i>date</i> comigo?`;
+  show(1);
+});
+document.getElementById('name').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('nameNext').click();});
+const noBtn=document.getElementById('noBtn');
+let dodgeCount=0, lastPhraseIndex=-1;
+const dodgePhrases=[
+    "Quase! 😈",
+    "Ui, por pouco! 😂",
+    "Esse botão tem medo de compromisso. 🤭",
+    "O teu dedo é rápido, mas eu sou mais. 😏",
+    "O universo está a dar-te uma dica. ❤️",
+    "Tens a certeza? Pensa bem... 👀",
+    "Esse \"Não\" parece estar com vergonha. 😂",
+    "Olha que o \"SIM\" está mesmo ali ao lado... 👈",
+    "Missão impossível: Apanhar este botão. 🎯",
+    "Vou fingir que não vi essa tentativa. 😇",
+    "Persistente! Gosto dessa energia. 😂",
+    "O botão foi tomar café. Já volta. ☕",
+    "Nem o botão quer ouvir um não. 🤣",
+    "Mais uma tentativa e talvez... Não. 😈",
+    "A curiosidade está a ganhar, não está? 🤭",
+    "Este botão tem mais reflexos que tu. 🏃",
+    "Quase que me convenceste. Quase. 😌",
+    "AHAHAH, ainda estás a tentar?! 😂",
+    "Dica: Há uma resposta muito mais gira ali ao lado. ❤️",
+    "O \"Não\" está de férias. 🏖️",
+    "Acho que o destino está a interferir. ✨",
+    "Última oportunidade... Mentira, podes tentar outra vez. 🤣",
+    "Pronto, admito: Programei isto para ser difícil. 😇",
+    "E se experimentasses carregar no coração? Só uma ideia. 🤭",
+    "Não desistas! Quer dizer... Desiste do \"Não\". 😂",
+    "Este botão tem treino de fuga profissional. 🥷",
+    "O convite continua de pé... E o botão continua a fugir. 😏",
+    "Já percebi: gostas de desafios. ❤️‍🔥",
+    "Está quase! Quer dizer... Não está nada. 😂",
+    "Prometo que o botão \"SIM\" é muito mais simpático. 🥹"
+];
+function dodge(){
+  dodgeCount++;
+  let nextIndex;
+  do { nextIndex=Math.floor(Math.random()*dodgePhrases.length); }
+  while(nextIndex===lastPhraseIndex && dodgePhrases.length>1);
+  lastPhraseIndex=nextIndex;
+  document.getElementById('tease').__phrasePT=dodgePhrases[nextIndex];document.getElementById('tease').textContent=language==='en'?([
+    "So close! 😈",
+    "Whoa, that was close! 😂",
+    "That button is afraid of commitment. 🤭",
+    "Your finger is fast, but I'm faster. 😏",
+    "The universe is trying to tell you something. ❤️",
+    "Are you sure? Think carefully... 👀",
+    "That \"No\" seems a little shy. 😂",
+    "Look, the \"YES\" button is right there... 👈",
+    "Mission impossible: Catch that button. 🎯",
+    "I'll pretend I didn't see that attempt. 😇",
+    "Persistent! I like that energy. 😂",
+    "The button went out for coffee. It'll be right back. ☕",
+    "Even the button doesn't want to hear a no. 🤣",
+    "One more try and maybe... Nope. 😈",
+    "Curiosity is getting the better of you, isn't it? 🤭",
+    "This button has better reflexes than you. 🏃",
+    "You almost convinced me. Almost. 😌",
+    "AHAHAH, you're still trying?! 😂",
+    "Hint: There's a much cuter answer right next to it. ❤️",
+    "The \"No\" button is on vacation. 🏖️",
+    "I think fate is getting involved. ✨",
+    "Last chance... Just kidding, you can try again. 🤣",
+    "Alright, I admit it: I programmed this to be difficult. 😇",
+    "What if you tried clicking the heart? Just a thought. 🤭",
+    "Don't give up! I mean... Give up on the \"No\". 😂",
+    "This button has professional escape training. 🥷",
+    "The invitation still stands... And the button is still running away. 😏",
+    "I get it now: You like a challenge. ❤️‍🔥",
+    "Almost there! I mean... Not even close. 😂",
+    "I promise the \"YES\" button is much friendlier. 🥹"
+  ][nextIndex]||dodgePhrases[nextIndex]):dodgePhrases[nextIndex];
+  const parent=noBtn.parentElement, maxX=Math.max(0,parent.clientWidth-noBtn.offsetWidth);
+  noBtn.style.position='relative';
+  noBtn.style.transform=`translate(${Math.round((Math.random()-.5)*Math.min(maxX,170))}px, ${Math.round((Math.random()-.5)*70)}px)`;
+}
+noBtn.addEventListener('pointerenter',dodge);
+noBtn.addEventListener('pointerdown',e=>{e.preventDefault();dodge();});
+noBtn.addEventListener('click',e=>{e.preventDefault();dodge();});
+document.getElementById('yesBtn').addEventListener('click',()=>show(2));
+
+function renderCalendar(){
+  const cal=document.getElementById('calendar');cal.innerHTML='';
+  document.getElementById('monthLabel').textContent=shownMonth.toLocaleDateString(language==='en'?'en-GB':'pt-PT',{month:'long',year:'numeric'});
+  (language==='en'?['Mon','Tue','Wed','Thu','Fri','Sat','Sun']:['2ª','3ª','4ª','5ª','6ª','Sáb','Dom']).forEach(d=>{const el=document.createElement('div');el.className='weekday';el.textContent=d;cal.append(el);});
+  const first=(shownMonth.getDay()+6)%7, count=new Date(shownMonth.getFullYear(),shownMonth.getMonth()+1,0).getDate();
+  for(let i=0;i<first;i++){const blank=document.createElement('div');cal.append(blank);}
+  for(let day=1;day<=count;day++){
+    const d=new Date(shownMonth.getFullYear(),shownMonth.getMonth(),day);d.setHours(0,0,0,0);
+    const b=document.createElement('button');b.className='day';b.textContent=day;b.disabled=d<today;
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    if(selectedDate===key)b.classList.add('selected');
+    b.addEventListener('click',()=>{selectedDate=key;document.getElementById('dateError').textContent='';document.getElementById('dateError').classList.remove('visible');updateTimeLimits();if(selectedDateTimeIsPast())showTimeError(msg('Essa hora já passou! 😅\nEscolhe uma hora mais tarde ou outro dia para o nosso [[date]]. 🙈','That time has already passed! 😅\nChoose a later time or another day for our date. 🙈'));else showTimeError('');renderCalendar();});
+    cal.append(b);
+  }
+}
+document.getElementById('prevMonth').addEventListener('click',()=>{const now=new Date(today.getFullYear(),today.getMonth(),1);const prev=new Date(shownMonth.getFullYear(),shownMonth.getMonth()-1,1);if(prev>=now){shownMonth=prev;renderCalendar();}});
+document.getElementById('nextMonth').addEventListener('click',()=>{shownMonth=new Date(shownMonth.getFullYear(),shownMonth.getMonth()+1,1);renderCalendar();});
+function showTimeError(message){
+  const input = document.getElementById('time');
+  const error = document.getElementById('timeError');
+  error.replaceChildren();
+  if (message) {
+    const lines = message.split('\n');
+    lines.forEach((line, i) => {
+      if (i > 0) error.appendChild(document.createElement('br'));
+      const parts = line.split('[[date]]');
+      parts.forEach((part, j) => {
+        if (j > 0) {
+          const italic = document.createElement('i');
+          italic.textContent = 'date';
+          error.appendChild(italic);
+        }
+        error.appendChild(document.createTextNode(part));
+      });
+    });
+  }
+  error.classList.toggle('visible', Boolean(message));
+  input.setAttribute('aria-invalid', message ? 'true' : 'false');
+  input.setCustomValidity(message.replace('[[date]]', 'date'));
+}
+function updateTimeLimits(){
+  const timeInput=document.getElementById('time');
+  const now=new Date();
+  const todayKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  if(selectedDate===todayKey){
+    timeInput.min=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  }else{
+    timeInput.removeAttribute('min');
+  }
+}
+function selectedDateTimeIsPast(){
+  const value=document.getElementById('time').value;
+  if(!selectedDate || !value) return false;
+  const [y,m,d]=selectedDate.split('-').map(Number);
+  const [h,min]=value.split(':').map(Number);
+  return new Date(y,m-1,d,h,min,0,0)<=new Date();
+}
+document.getElementById('time').addEventListener('focus',updateTimeLimits);
+document.getElementById('time').addEventListener('input',()=>showTimeError(''));
+document.getElementById('time').addEventListener('change',()=>{
+  updateTimeLimits();
+  if(selectedDateTimeIsPast()){
+    showTimeError(msg('Essa hora já passou! 😅\nEscolhe uma hora mais tarde ou outro dia para o nosso [[date]]. 🙈','That time has already passed! 😅\nChoose a later time or another day for our date. 🙈'));
+  }else{
+    showTimeError('');
+  }
+});
+document.getElementById('dateNext').addEventListener('click',()=>{
+  if(!selectedDate){const e=document.getElementById('dateError');e.textContent=msg('Ei, ainda não escolheste o dia! 😏 O calendário está ali à tua espera. Escolhe uma data para o nosso date. ❤️','Hey, you haven\'t picked a day yet! 😏 The calendar is waiting. Choose a date for our date. ❤️');e.classList.add('visible');e.scrollIntoView({behavior:'smooth',block:'nearest'});return;}
+  const dateError=document.getElementById('dateError');dateError.textContent='';dateError.classList.remove('visible');
+  updateTimeLimits();
+  const timeInput=document.getElementById('time');
+  if(selectedDateTimeIsPast()){
+    showTimeError(msg('Essa hora já passou! 😅\nEscolhe uma hora mais tarde ou outro dia para o nosso [[date]].','That time has already passed! 😅\nChoose a later time or another day for our date.'));
+    document.getElementById('timeError').scrollIntoView({behavior:'smooth',block:'nearest'});
+    timeInput.focus();
+    return;
+  }
+  showTimeError('');
+  show(3);
+});
+document.querySelectorAll('#choices [data-food]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#choices [data-food]').forEach(x=>x.classList.remove('selected'));
+  b.classList.add('selected');selectedFood=b.dataset.food;document.getElementById('foodError').textContent='';document.getElementById('foodError').classList.remove('visible');
+}));
+document.querySelectorAll('[data-dessert]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('[data-dessert]').forEach(x=>x.classList.remove('selected'));
+  b.classList.add('selected');selectedDessert=b.dataset.dessert;document.getElementById('dessertError').textContent='';document.getElementById('dessertError').classList.remove('visible');
+}));
+document.getElementById('foodNext').addEventListener('click',()=>{if(!selectedFood){const e=document.getElementById('foodError');e.textContent=msg('Ainda não escolheste o que te apetece comer! 🍕 Vá, escolhe uma opção... Ou deixa-me surpreender-te. 😜','You haven\'t picked what you want to eat yet! 🍕 Come on, choose an option... Or let me surprise you. 😜');e.classList.add('visible');e.scrollIntoView({behavior:'smooth',block:'nearest'});return;}show(4);});
+document.getElementById('dessertBack').addEventListener('click',()=>show(3));
+document.getElementById('dessertNext').addEventListener('click',()=>{
+  if(!selectedDessert){const e=document.getElementById('dessertError');e.textContent=msg('E a sobremesa? 👀 Ainda não escolheste! Podes escolher uma tentação ou «Dispenso sobremesa», mas não me deixes a decidir tudo. 😏','And dessert? 👀 You haven\'t chosen yet! Pick a temptation or «No dessert», but don\'t leave every decision to me. 😏');e.classList.add('visible');e.scrollIntoView({behavior:'smooth',block:'nearest'});return;}
+  const dateObj=new Date(selectedDate+'T12:00:00');
+  const dateText=dateObj.toLocaleDateString(language==='en'?'en-GB':'pt-PT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const time=document.getElementById('time').value;
+  document.getElementById('summary').innerHTML=`<strong>💌 ${msg('Convidada','Guest')}:</strong> ${safeText(guestName)}<br><strong>📅 ${msg('Data','Date')}:</strong> ${safeText(dateText)}${time?'<br><strong>🕰️ '+msg('Hora','Time')+':</strong> '+safeText(time):''}<br><strong>🍽️ ${msg('Comida','Food')}:</strong> ${safeText(language==='en'?(foodEnglish[selectedFood]||selectedFood):selectedFood)}<br><strong>🍰 ${msg('Sobremesa','Dessert')}:</strong> ${safeText(language==='en'?(dessertEnglish[selectedDessert]||selectedDessert):selectedDessert)}`;
+  document.getElementById('finalIntro').textContent=language==='en'?`${guestName}, this is getting dangerously interesting. 🤭`:`${guestName}, isto está a ficar perigosamente interessante. 🤭`;
+  show(5);
+});
+document.getElementById('confirmBtn').addEventListener('click',async()=>{
+  const status=document.getElementById('status'), btn=document.getElementById('confirmBtn');
+  if(EMAILJS_PUBLIC_KEY.startsWith('ADICIONA_')||EMAILJS_SERVICE_ID.startsWith('ADICIONA_')||EMAILJS_TEMPLATE_ID.startsWith('ADICIONA_')){
+    status.textContent=msg('O site está pronto, mas falta ligar o serviço de email para a confirmação chegar automaticamente. Não foi enviado nenhum email.','The site is ready, but the email service still needs to be connected for automatic confirmation. No email was sent.');
+    return;
+  }
+  btn.disabled=true;status.textContent=msg('A enviar a confirmação...','Sending confirmation...');
+  try{
+    if(!window.emailjs)throw new Error('Serviço de email indisponível');
+    emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});
+    const dateObj=new Date(selectedDate+'T12:00:00');
+    await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,{
+      to_email:EMAIL_TO,
+      guest_name:guestName,
+      date:selectedDate,
+      date_formatted:dateObj.toLocaleDateString(language==='en'?'en-GB':'pt-PT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),
+      time:document.getElementById('time').value||msg('Sem preferência indicada','No preference specified'),
+      food:language==='en'?(foodEnglish[selectedFood]||selectedFood):selectedFood,
+      dessert:language==='en'?(dessertEnglish[selectedDessert]||selectedDessert):selectedDessert,
+      response:msg('Sim, aceitou o date ❤️','Yes, accepted the date ❤️')
+    });
+    status.textContent=msg('Confirmação enviada! Agora é contigo preparar a surpresa. 😏❤️','Confirmation sent! Now it\'s your turn to prepare the surprise. 😏❤️');
+    btn.textContent=msg('Confirmado ❤️','Confirmed ❤️');
+  }catch(err){
+    status.textContent=msg('Não foi possível enviar o email agora. Tenta novamente mais tarde.','Could not send the email right now. Please try again later.');
+    btn.disabled=false;
+  }
+});
+document.getElementById('restart').addEventListener('click',()=>{
+  guestName='';selectedDate=null;selectedFood='';selectedDessert='';document.getElementById('name').value='';document.getElementById('time').value='';
+  document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
+  document.getElementById('dateError').textContent='';document.getElementById('dateError').classList.remove('visible');document.getElementById('foodError').textContent='';document.getElementById('foodError').classList.remove('visible');document.getElementById('dessertError').textContent='';document.getElementById('dessertError').classList.remove('visible');
+  noBtn.style.transform='';shownMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendar();show(0);
+});
+
+// Bilingual interface: Portuguese is the default; choices and validation messages follow the selected language.
+let language = 'pt';
+const translations = {
+'Um pequeno mistério':'A little mystery','Antes de começarmos...':'Before we begin...','Como te chamas, menina misteriosa? 👀':'What is your name, mysterious girl? 👀','O teu nome... 😊':'Your name... 😊','Continuar ❤️':'Continue ❤️','Prometo que não é um formulário de candidatura. 😇':"I promise this isn't a job application. 😇",
+'Uma pergunta muito importante':'A very important question','Aceitas um <i>date</i> comigo?':'Will you go on a date with me?','Mas pensa bem antes de responder... Há convites que podem ter consequências. 🤭':'Think carefully before answering... Some invitations have consequences. 🤭','Não 🙄':'No 🙄','Vá lá, diz-me o teu nome 🤭':'Come on, tell me your name 🤭','Escolhe com sabedoria. Ou tenta, vá. 😈':'Choose wisely. Or at least try. 😈',
+'Passo 1 de 4':'Step 1 of 4','Olhaaaa, temos uma corajosa! 😏':'Well, look at that, a brave one! 😏','Agora não vale dizer que não foste avisada. Vamos escolher o dia. ❤️':"No saying you weren't warned. Let's pick the day. ❤️",'Hora preferida (opcional)':'Preferred time (optional)','É este o dia 📅':'This is the day 📅','Escolhe uma data futura. O destino também precisa de agenda.':'Choose a future date. Destiny needs a calendar too.',
+'Passo 2 de 4':'Step 2 of 4','O que te apetece comer? 🍽️':'What are you in the mood to eat? 🍽️','Há opções para quase todos os apetites — escolhe a tua vibe. O restaurante... continua segredo. 🤫':'There are options for almost every craving — pick your vibe. The restaurant... is still a secret. 🤫','Escolhe uma opção para a refeição. A sobremesa fica para o próximo passo. 🤫':'Choose a meal option. Dessert comes next. 🤫','Agora, a sobremesa 🍰':'Now, dessert 🍰',
+'Passo 3 de 4':'Step 3 of 4','E para sobremesa? 🍰':'And for dessert? 🍰','Escolhe uma tentação... ou deixa a imaginação trabalhar. 😏':'Choose a temptation... or let your imagination do the work. 😏','Sem pressão: também podes escolher «Dispenso sobremesa». 😉':'No pressure: you can also choose “No dessert”. 😉','Voltar à comida':'Back to food','Quero ver a surpresa 🤭':'Show me the surprise 🤭',
+'Passo 4 de 4':'Step 4 of 4','Temos um [[date]]... Quase oficial. ❤️':'We have a date... Almost official. ❤️','Boa escolha. Agora começa a parte interessante.':'Good choice. Now the interesting part begins.','O restaurante?':'The restaurant?','Segredo absoluto. 🤫':'Top secret. 🤫','O resto?':'The rest?','Logo se vê... 😉':'We\'ll see... 😉','Se carregares em confirmar, recebo o resumo por email. Não precisas de revelar mais nenhum segredo... por enquanto. 😏':'If you confirm, I\'ll receive the summary by email. No need to reveal any more secrets... for now. 😏','Confirmar o date ❤️':'Confirm the date ❤️','Voltar ao início':'Back to the beginning',
+'Ativar modo escuro':'Enable dark mode','Ativar modo claro':'Enable light mode',
+'SIM ❤️':'YES ❤️','Feito pelo Rúben André Barreiro, com um bocadinho de mistério e uma pitada de atrevimento ✨':'Made by Rúben André Barreiro, with a little mystery and a touch of cheekiness ✨',
+'Italiano':'Italian','Sushi / Japonês':'Sushi / Japanese','Frango frito':'Fried Chicken','Sandes / Baguetes':'Sandwiches / Baguettes','Burritos / Quesadillas':'Burritos / Quesadillas','Comida de food truck':'Food truck food','Hambúrguer':'Burger','Mexicano / Tacos':'Mexican / Tacos','Steakhouse / Bife':'Steakhouse / Steak','Peixe grelhado':'Grilled fish','Marisco':'Seafood','Comida portuguesa':'Portuguese food','Petiscos / Tapas':'Small plates / Tapas','Grego':'Greek','Árabe / Libanês':'Arab / Lebanese','Indiano':'Indian','Tailandês':'Thai','Chinês':'Chinese','Coreano':'Korean','Francês':'French','Alemão':'German','Saladas / Saudável':'Salads / Healthy','Vegetariano / Vegan':'Vegetarian / Vegan','Pequeno-almoço':'Breakfast','Ostras e marisco':'Oysters and seafood','Kebab / Turco':'Kebab / Turkish','Comida de conforto':'Comfort food','Cozinha internacional':'International cuisine','Brasileiro':'Brazilian','Argentino':'Argentinian','Vietnamita':'Vietnamese','Buffet livre':'Buffet','Fusão asiática':'Asian fusion','Comida de forno':'Oven-baked food','Surpreende-me':'Surprise me','Brownie com gelado':'Brownie with ice cream','Crepes / waffles':'Crepes / waffles','Gelado':'Ice cream','Pastel de nata':'Portuguese custard tart','Panquecas':'Pancakes','Fruta fresca':'Fresh fruit','Só um café':'Just a coffee','Morangos com chocolate':'Chocolate-covered strawberries','Surpreende-me também':'Surprise me too','A sobremesa podes ser tu 😉':'You could be the dessert 😉','Dispenso sobremesa':'No dessert'
+};
+const foodEnglish = {'Italiano':'Italian','Sushi / Japonês':'Sushi / Japanese','Ramen':'Ramen','Dumplings':'Dumplings','Fast Food':'Fast Food','Frango Frito':'Fried Chicken','Hot dogs':'Hot dogs','Sandes / Baguetes':'Sandwiches / Baguettes','Wraps':'Wraps','Burritos / Quesadillas':'Burritos / Quesadillas','Street food':'Street food','Comida de food truck':'Food truck food','Hambúrguer':'Burger','Pizza':'Pizza','Mexicano / Tacos':'Mexican / Tacos','Steakhouse / Bife':'Steakhouse / Steak','Churrasco':'Barbecue','Peixe grelhado':'Grilled fish','Marisco':'Seafood','Comida portuguesa':'Portuguese food','Francesinha':'Francesinha','Petiscos / Tapas':'Small plates / Tapas','Grego':'Greek','Árabe / Libanês':'Arab / Lebanese','Indiano':'Indian','Tailandês':'Thai','Chinês':'Chinese','Coreano':'Korean','Francês':'French','Alemão':'German','Saladas / Saudável':'Salads / Healthy','Vegetariano / Vegan':'Vegetarian / Vegan','Fondue / Raclette':'Fondue / Raclette','Brunch':'Brunch','Pequeno-almoço':'Breakfast','Ostras e marisco':'Oysters and seafood','Poke / Bowls':'Poke / Bowls','Kebab / Turco':'Kebab / Turkish','Comida de conforto':'Comfort food','Cozinha internacional':'International cuisine','Brasileiro':'Brazilian','Argentino':'Argentinian','Vietnamita':'Vietnamese','Buffet livre':'Buffet','All-you-can-eat':'All-you-can-eat','Fusão asiática':'Asian fusion','Comida de forno':'Oven-baked food','Surpreende-me':'Surprise me'};
+const dessertEnglish = {'Cheesecake':'Cheesecake','Brownie com gelado':'Brownie with ice cream','Crepes / waffles':'Crepes / waffles','Gelado':'Ice cream','Chocolate':'Chocolate','Tiramisu':'Tiramisu','Churros':'Churros','Pastel de nata':'Portuguese custard tart','Panquecas':'Pancakes','Fruta fresca':'Fresh fruit','Só um café':'Just a coffee','Morangos com chocolate':'Chocolate-covered strawberries','Surpreende-me também':'Surprise me too','A sobremesa podes ser tu 😉':'You could be the dessert 😉','Logo se vê... 😉':'We\'ll see... 😉','Dispenso sobremesa':'No dessert'};
+function msg(pt,en){return language==='en'?en:pt;}
+function setLanguage(next){
+ language=next; document.documentElement.lang=next==='en'?'en':'pt-PT'; document.title=msg('Um convite para ti... ❤️','An invitation for you... ❤️');
+ document.getElementById('langPt').classList.toggle('active',next==='pt');document.getElementById('langEn').classList.toggle('active',next==='en');
+ document.getElementById('langPt').setAttribute('aria-pressed',String(next==='pt'));document.getElementById('langEn').setAttribute('aria-pressed',String(next==='en'));
+ const walker=document.createTreeWalker(document.querySelector('main.card'),NodeFilter.SHOW_TEXT);let node;
+ while(node=walker.nextNode()){if(!node.__originalText)node.__originalText=node.nodeValue;const original=node.__originalText;const trimmed=original.trim();if(translations[trimmed])node.nodeValue=original.replace(trimmed, next==='en'?translations[trimmed]:trimmed);}
+ document.querySelector('.footer').textContent=msg('Feito pelo Rúben André Barreiro, com um bocadinho de mistério e uma pitada de atrevimento. ✨','Made by Rúben André Barreiro, with a little mystery and a touch of cheekiness. ✨');
+ document.getElementById('themeLabel').textContent=msg('Ativar modo escuro','Enable dark mode');document.getElementById('themeToggle').setAttribute('aria-label',msg('Ativar modo escuro','Enable dark mode'));
+ document.getElementById('name').placeholder=msg('O teu nome... 😊','Your name... 😊');document.getElementById('name').setAttribute('aria-label',msg('O teu nome','Your name...'));
+ document.getElementById('prevMonth').setAttribute('aria-label',msg('Mês anterior','Previous month'));document.getElementById('nextMonth').setAttribute('aria-label',msg('Mês seguinte','Next month'));
+ document.querySelectorAll('#choices [data-food]').forEach(b=>{const span=b.querySelector('span');const label=foodEnglish[b.dataset.food]||b.dataset.food;let textNode=[...b.childNodes].find(n=>n.nodeType===Node.TEXT_NODE&&n.nodeValue.trim());if(textNode){if(!textNode.__originalText)textNode.__originalText=textNode.nodeValue;textNode.nodeValue=textNode.__originalText.replace(textNode.__originalText.trim(),next==='en'?label:textNode.__originalText.trim());}});
+ document.querySelectorAll('[data-dessert]').forEach(b=>{const label=dessertEnglish[b.dataset.dessert]||b.dataset.dessert;let textNode=[...b.childNodes].find(n=>n.nodeType===Node.TEXT_NODE&&n.nodeValue.trim());if(textNode){if(!textNode.__originalText)textNode.__originalText=textNode.nodeValue;textNode.nodeValue=textNode.__originalText.replace(textNode.__originalText.trim(),next==='en'?label:textNode.__originalText.trim());}});
+  if(guestName){
+    document.getElementById('greeting').innerHTML = next==='en'
+      ? `${safeText(guestName)}, will you go on a date with me?`
+      : `${safeText(guestName)}, aceitas um <i>date</i> comigo?`;
+  }
+ const tease=document.getElementById('tease');if(tease && document.getElementById('s2').classList.contains('hidden')===false){const pt=tease.__phrasePT||tease.textContent;tease.__phrasePT=pt;const i=dodgePhrases.indexOf(pt);const en=[
+    "So close! 😈",
+    "Whoa, that was close! 😂",
+    "That button is afraid of commitment. 🤭",
+    "Your finger is fast, but I'm faster. 😏",
+    "The universe is trying to tell you something. ❤️",
+    "Are you sure? Think carefully... 👀",
+    "That \"No\" seems a little shy. 😂",
+    "Look, the \"YES\" button is right there... 👈",
+    "Mission impossible: Catch that button. 🎯",
+    "I'll pretend I didn't see that attempt. 😇",
+    "Persistent! I like that energy. 😂",
+    "The button went out for coffee. It'll be right back. ☕",
+    "Even the button doesn't want to hear a no. 🤣",
+    "One more try and maybe... Nope. 😈",
+    "Curiosity is getting the better of you, isn't it? 🤭",
+    "This button has better reflexes than you. 🏃",
+    "You almost convinced me. Almost. 😌",
+    "AHAHAH, you're still trying?! 😂",
+    "Hint: There's a much cuter answer right next to it. ❤️",
+    "The \"No\" button is on vacation. 🏖️",
+    "I think fate is getting involved. ✨",
+    "Last chance... Just kidding, you can try again. 🤣",
+    "Alright, I admit it: I programmed this to be difficult. 😇",
+    "What if you tried clicking the heart? Just a thought. 🤭",
+    "Don't give up! I mean... Give up on the \"No\". 😂",
+    "This button has professional escape training. 🥷",
+    "The invitation still stands... And the button is still running away. 😏",
+    "I get it now: You like a challenge. ❤️‍🔥",
+    "Almost there! I mean... Not even close. 😂",
+    "I promise the \"YES\" button is much friendlier. 🥹"
+  ];if(next==='en'){const idx=Math.max(0,i);tease.textContent=en[idx]||'Choose wisely. Or at least try. 😈';}else tease.textContent=pt;}
+ renderCalendar();
+}
+document.getElementById('langPt').addEventListener('click',()=>setLanguage('pt'));document.getElementById('langEn').addEventListener('click',()=>setLanguage('en'));
+
+renderCalendar();show(0);
+</script>
+</body>
+</html>
